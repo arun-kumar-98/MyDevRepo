@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- dataSource configuration -->
+	<bean id="oradrds"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+<!-- 		<property name="url" -->
+<!-- 			value="jdbc:oracle:thin:@localhost:1521:orcl" /> -->
+		<property name="username" value="scott" />
+		<property name="password" value="tiger" />
+		
+		<!-- postgres db details -->
+		
+		
+	
+		
+		<!--working with connectionProperties  -->
+<!-- 		<property name="connectionProperties"> -->
+<!-- 			<props> -->
+<!-- 				<prop key="user">scott</prop> -->
+<!-- 				<prop key="password">tiger</prop> -->
+
+<!-- 			</props> -->
+<!-- 			</property> -->
+	</bean>
+	
+	<bean id="postDrds" class="org.springframework.jdbc.datasource.DriverManagerDataSource" primary="true">
+	<property name="driverClassName" value="org.postgresql.Driver"/>
+<!-- 	<property name="url" value="jdbc:postgres://localhost:postgres"/> -->
+	<property name="username" value="postgres"/>
+	<property name="password" value="postgres"/>
+	</bean>
+	
+	<!-- configure Dao class -->
+	<bean id="custDAO" class="com.nt.dao.CustomerDAOImpl">
+		<constructor-arg ref="hkdrds1" />
+	</bean>
+
+	<!-- configure service class -->
+	<bean id="custService"
+		class="com.nt.service.CustomerMgmtServiceImpl">
+		<constructor-arg ref="custDAO" />
+	</bean>
+	<!-- cfg controller -->
+	<bean id="controller" class="com.nt.controller.MainController">
+		<constructor-arg ref="custService" />
+	</bean>
+	
+	<!-- working with single connection -->
+<!-- 	<bean id="orascds" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" parent="oradrds"/> -->
+
+
+<bean id="hcDrds" class="com.zaxxer.hikari.HikariDataSource" parent="oradrds">
+<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+<property name="minimumIdle" value="20"/>
+<property name="maximumPoolSize" value="50"/>
+<property name="connectionTimeout" value="2000"/>
+</bean>
+<bean id="hkdrds1" class="com.zaxxer.hikari.HikariDataSource" parent="postDrds">
+<property name="jdbcUrl" value="jdbc:postgresql://localhost:postgres"/>
+<property name="minimumIdle" value="20"/>
+<property name="connectionTimeout" value="1000"/>
+</bean>
+</beans>
