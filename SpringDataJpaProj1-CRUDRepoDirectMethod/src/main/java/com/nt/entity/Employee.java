@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -17,7 +18,8 @@ import lombok.Data;
 public class Employee implements Serializable {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(name = "hibernate_seq",allocationSize = 100)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "hibernate_seq")
 	private Integer eno;
 	@Column(name = "ename",length = 10)
 	private String ename;
